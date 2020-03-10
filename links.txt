@@ -1,0 +1,13 @@
+// Appodeal
+https://wiki.appodeal.com/en/admob-sync
+
+https://www.appodeal.com/signin
+https://wiki.appodeal.com/ru/android/integratsiya-android-sdk-2-6-2
+https://wiki.appodeal.com/ru/android/integratsiya-android-sdk-2-6-2/tipy-reklamy
+
+//AdMobile
+https://admob.google.com/home/
+https://apps.admob.com/v2/apps/5701437876/adunits/create?_ga=2.122229193.373710933.1583758475-584917242.1583758475
+
+// initialize MobileAds
+https://developers.google.com/admob/android/quick-start?hl=ru#import_the_mobile_ads_sdk

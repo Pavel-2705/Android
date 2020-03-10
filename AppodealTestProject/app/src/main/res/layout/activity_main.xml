@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonBanner"
+        style="@style/MainLayoutButtonStyle"
+        android:text="@string/button_banners"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/vertical" />
+
+
+    <Button
+        android:id="@+id/buttonInterstitials"
+        style="@style/MainLayoutButtonStyle"
+        android:text="@string/button_interstitials"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal"
+        app:layout_constraintStart_toStartOf="@+id/vertical" />
+
+
+    <Button
+        android:id="@+id/buttonRewardVideo"
+        style="@style/MainLayoutButtonStyle"
+        android:text="@string/button_reward_video"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/vertical"
+        app:layout_constraintTop_toTopOf="@+id/horizontal" />
+
+    <Button
+        android:id="@+id/buttonNative"
+        style="@style/MainLayoutButtonStyle"
+        android:text="@string/button_native"
+        app:layout_constraintEnd_toStartOf="@+id/vertical"
+        app:layout_constraintTop_toTopOf="@+id/horizontal" />
+
+    <com.google.android.ads.nativetemplates.TemplateView
+        android:id="@+id/nativeTemplateView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:gnt_template_type="@layout/gnt_small_template_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/nativeAdsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonBanner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adView" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

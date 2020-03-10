@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AppodealTestProject</string>
+
+    <!--    Main activity resources-->
+    <string name="button_banners">Banners</string>
+    <string name="button_interstitials">Interstitials</string>
+    <string name="button_reward_video">Reward Video</string>
+    <string name="button_native">Native</string>
+
+    <string name="nativeAdMessage">Ad</string>
+</resources>
