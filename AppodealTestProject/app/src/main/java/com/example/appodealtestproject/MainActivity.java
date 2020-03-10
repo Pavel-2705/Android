@@ -8,29 +8,23 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TimeUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.RewardedVideoCallbacks;
 import com.google.android.ads.nativetemplates.NativeTemplateStyle;
 import com.google.android.ads.nativetemplates.TemplateView;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        RewardedVideoAdListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String LOG_TAG = "LOG_TAG";
     private final static String MY_APPODEAL_APP_KEY =
@@ -43,14 +37,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static int BANNER_COUNTER = 0;
     private final static int BANNER_MAX_COUNTER = 5;
 
+    private final static long INTERSTATIAL_SLEEP_TIME_IN_MILLISECONDS = 60 * 1000;
+
+    private static int REWARDED_VIDEO_COUNTER = 0;
+    private final static int REWARDED_VIDEO_MAX_COUNTER = 3;
 
     private Button buttonBanner,
             buttonInterstitials,
             buttonRewardVideo,
             buttonNative;
-
-    private InterstitialAd interstitialAd;
-    private RewardedVideoAd rewardedVideoAd;
 
     private TemplateView nativeTemplateView;
     private RecyclerView nativeAdsRecyclerView;
@@ -99,18 +94,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setRewardedVideoAd() {
-        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
-        rewardedVideoAd.setRewardedVideoAdListener(this);
+        Appodeal.setRewardedVideoCallbacks(new RewardedVideoCallbacks() {
+            @Override
+            public void onRewardedVideoLoaded(boolean b) {
+                if (REWARDED_VIDEO_COUNTER <= REWARDED_VIDEO_MAX_COUNTER) {
+                    buttonRewardVideo.setVisibility(View.VISIBLE);
+                    REWARDED_VIDEO_COUNTER++;
+                }
+            }
 
-        loadRewardedVideoAd();
+            @Override
+            public void onRewardedVideoFailedToLoad() {
+
+            }
+
+            @Override
+            public void onRewardedVideoShown() {
+
+            }
+
+            @Override
+            public void onRewardedVideoShowFailed() {
+
+            }
+
+            @Override
+            public void onRewardedVideoFinished(double v, String s) {
+
+            }
+
+            @Override
+            public void onRewardedVideoClosed(boolean b) {
+
+            }
+
+            @Override
+            public void onRewardedVideoExpired() {
+
+            }
+
+            @Override
+            public void onRewardedVideoClicked() {
+
+            }
+        });
 
         buttonRewardVideo = findViewById(R.id.buttonRewardVideo);
         buttonRewardVideo.setOnClickListener(this);
-    }
-
-    private void loadRewardedVideoAd() {
-        rewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
-                new AdRequest.Builder().build());
     }
 
     private void setNativeAd() {
@@ -173,20 +203,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Appodeal.hide(this, Appodeal.BANNER);
                 if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
                     Appodeal.show(this, Appodeal.INTERSTITIAL);
-                    //ToDo: Need test here
+
                     SleepTask sleepTask = new SleepTask();
-                    sleepTask.execute((long) (60*1000));
+                    sleepTask.execute(INTERSTATIAL_SLEEP_TIME_IN_MILLISECONDS);
                 } else {
                     Log.d(LOG_TAG, "The interstitial wasn't loaded yet.");
                 }
                 break;
             case R.id.buttonRewardVideo:
                 Appodeal.hide(this, Appodeal.BANNER);
-                if (rewardedVideoAd.isLoaded()
-//                Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)
-                ) {
-                    rewardedVideoAd.show();
-//                    Appodeal.show(this, Appodeal.REWARDED_VIDEO);
+                buttonRewardVideo.setVisibility(View.INVISIBLE);
+                if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
+                    Appodeal.show(this, Appodeal.REWARDED_VIDEO);
                 }
                 break;
             case R.id.buttonNative:
@@ -197,67 +225,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onResume() {
-        rewardedVideoAd.resume(this);
         super.onResume();
         Appodeal.onResume(this, Appodeal.BANNER_TOP);
-    }
-
-    @Override
-    public void onPause() {
-        rewardedVideoAd.pause(this);
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        rewardedVideoAd.destroy(this);
-        super.onDestroy();
-    }
-
-
-    @Override
-    public void onRewarded(RewardItem reward) {
-        Toast.makeText(this, "onRewarded! currency: " + reward.getType() + "  amount: " +
-                reward.getAmount(), Toast.LENGTH_SHORT).show();
-        // Reward the user.
-    }
-
-    @Override
-    public void onRewardedVideoAdLeftApplication() {
-        Toast.makeText(this, "onRewardedVideoAdLeftApplication",
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoAdClosed() {
-        Toast.makeText(this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
-        loadRewardedVideoAd();
-    }
-
-    @Override
-    public void onRewardedVideoAdFailedToLoad(int errorCode) {
-        Toast.makeText(this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoAdLoaded() {
-        buttonRewardVideo.setVisibility(View.VISIBLE);
-        Toast.makeText(this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoAdOpened() {
-        Toast.makeText(this, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoStarted() {
-        Toast.makeText(this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoCompleted() {
-        Toast.makeText(this, "onRewardedVideoCompleted", Toast.LENGTH_SHORT).show();
     }
 
     class SleepTask extends AsyncTask<Long, Void, Void> {
