@@ -144,6 +144,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setNativeAd() {
+        initializeView();
+
+        Appodeal.cache(this, Appodeal.NATIVE, 3);
+
         adLoader = new AdLoader.Builder(this,
                 "ca-app-pub-3940256099942544/2247696110")
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
@@ -200,8 +204,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.buttonInterstitials:
-                Appodeal.hide(this, Appodeal.BANNER);
                 if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
+                    Appodeal.hide(this, Appodeal.BANNER);
                     Appodeal.show(this, Appodeal.INTERSTITIAL);
 
                     SleepTask sleepTask = new SleepTask();
@@ -211,14 +215,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.buttonRewardVideo:
-                Appodeal.hide(this, Appodeal.BANNER);
-                buttonRewardVideo.setVisibility(View.INVISIBLE);
                 if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
+                    Appodeal.hide(this, Appodeal.BANNER);
+                    buttonRewardVideo.setVisibility(View.INVISIBLE);
                     Appodeal.show(this, Appodeal.REWARDED_VIDEO);
                 }
                 break;
             case R.id.buttonNative:
-                Appodeal.hide(this, Appodeal.BANNER);
+                if (Appodeal.isLoaded(Appodeal.NATIVE)) {
+                    Appodeal.hide(this, Appodeal.BANNER);
+
+                }
                 break;
         }
     }
