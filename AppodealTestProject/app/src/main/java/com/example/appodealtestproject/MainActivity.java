@@ -5,8 +5,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,7 +18,6 @@ import com.google.android.ads.nativetemplates.NativeTemplateStyle;
 import com.google.android.ads.nativetemplates.TemplateView;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -25,6 +26,8 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         RewardedVideoAdListener {
@@ -37,12 +40,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Appodeal.REWARDED_VIDEO |
             Appodeal.NATIVE;
 
+    private static int BANNER_COUNTER = 0;
+    private final static int BANNER_MAX_COUNTER = 5;
+
+
     private Button buttonBanner,
             buttonInterstitials,
             buttonRewardVideo,
             buttonNative;
 
-    private AdView adView;
     private InterstitialAd interstitialAd;
     private RewardedVideoAd rewardedVideoAd;
 
@@ -83,19 +89,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setBanner() {
-        adView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-
         buttonBanner = findViewById(R.id.buttonBanner);
         buttonBanner.setOnClickListener(this);
     }
 
     private void setInterstitialAd() {
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-        interstitialAd.loadAd(new AdRequest.Builder().build());
-
         buttonInterstitials = findViewById(R.id.buttonInterstitials);
         buttonInterstitials.setOnClickListener(this);
     }
@@ -162,34 +160,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonBanner:
-                Appodeal.show(this, Appodeal.BANNER_TOP);
-
+                if (Appodeal.isLoaded(Appodeal.BANNER)) {
+                    BANNER_COUNTER++;
+                    Appodeal.show(this, Appodeal.BANNER_TOP);
+                }
+                if (BANNER_COUNTER >
+                        BANNER_MAX_COUNTER) {
+                    buttonBanner.setVisibility(View.INVISIBLE);
+                }
                 break;
             case R.id.buttonInterstitials:
-                if (interstitialAd.isLoaded()
-//                Appodeal.isLoaded(Appodeal.INTERSTITIAL)
-                ) {
-                    interstitialAd.show();
+                Appodeal.hide(this, Appodeal.BANNER);
+                if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
+                    Appodeal.show(this, Appodeal.INTERSTITIAL);
                     //ToDo: Need test here
-/*                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            buttonInterstitials.setVisibility(View.INVISIBLE);
-                            try {
-                                Thread.sleep(60 * 1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            buttonInterstitials.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    thread.start();*/
-//                    Appodeal.show(MainActivity.this, Appodeal.INTERSTITIAL);
+                    SleepTask sleepTask = new SleepTask();
+                    sleepTask.execute((long) (60*1000));
                 } else {
                     Log.d(LOG_TAG, "The interstitial wasn't loaded yet.");
                 }
                 break;
             case R.id.buttonRewardVideo:
+                Appodeal.hide(this, Appodeal.BANNER);
                 if (rewardedVideoAd.isLoaded()
 //                Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)
                 ) {
@@ -198,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.buttonNative:
+                Appodeal.hide(this, Appodeal.BANNER);
                 break;
         }
     }
@@ -265,5 +258,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onRewardedVideoCompleted() {
         Toast.makeText(this, "onRewardedVideoCompleted", Toast.LENGTH_SHORT).show();
+    }
+
+    class SleepTask extends AsyncTask<Long, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            buttonInterstitials.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(Long... sleepTimeInMillisecond) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(sleepTimeInMillisecond[0]);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            buttonInterstitials.setVisibility(View.VISIBLE);
+        }
     }
 }
