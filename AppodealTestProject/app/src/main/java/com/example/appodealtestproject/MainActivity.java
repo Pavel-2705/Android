@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             buttonNative;
 
     private RecyclerView nativeAdsRecyclerView;
-    private AppodealWrapperAdapter appodealWrapperAdapter;
+    private MyTestAdapter myTestAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,12 +181,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nativeAdsRecyclerView = findViewById(R.id.nativeAdsRecyclerView);
 
         //ToDo: Need do some tests
-        RecyclerView.Adapter myTestAdapter = new MyTestAdapter(this);
-        appodealWrapperAdapter = new AppodealWrapperAdapter(myTestAdapter, 0);
+        myTestAdapter = new MyTestAdapter(this);
         nativeAdsRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        nativeAdsRecyclerView.setAdapter(appodealWrapperAdapter);
-
+        nativeAdsRecyclerView.setAdapter(myTestAdapter);
     }
 
     @Override
@@ -219,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (Appodeal.isLoaded(Appodeal.NATIVE)) {
                     //ToDo: Need do some tests
                     nativeAdList = Appodeal.getNativeAds(NATIVE_AD_MAX_COUNTER);
+                    myTestAdapter.updateNativeAdList(nativeAdList);
                     Appodeal.cache(this, Appodeal.NATIVE, NATIVE_AD_MAX_COUNTER);
                 }
                 break;
