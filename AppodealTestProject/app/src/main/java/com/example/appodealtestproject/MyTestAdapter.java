@@ -8,13 +8,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.appodeal.ads.NativeAd;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyTestAdapter extends RecyclerView.Adapter<MyTestAdapter.MyTestViewHolder> {
 
     private final LayoutInflater inflater;
-    private List<Integer> moviesList;
+    private List<NativeAd> moviesList;
     private Context context;
 
     public class MyTestViewHolder extends RecyclerView.ViewHolder {
@@ -46,6 +48,10 @@ public class MyTestAdapter extends RecyclerView.Adapter<MyTestAdapter.MyTestView
     @Override
     public int getItemCount() {
         return moviesList != null ? moviesList.size() : 0;
+    }
+
+    public void updateAdapter(List<NativeAd> newNativeAds){
+        notifyDataSetChanged();
     }
 }
 

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.NativeAd;
 import com.appodeal.ads.RewardedVideoCallbacks;
 import com.google.android.ads.nativetemplates.NativeTemplateStyle;
 import com.google.android.ads.nativetemplates.TemplateView;
@@ -22,6 +23,8 @@ import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static int REWARDED_VIDEO_COUNTER = 0;
     private final static int REWARDED_VIDEO_MAX_COUNTER = 3;
+
+    private final static int NATIVE_AD_MAX_COUNTER = 3;
+    private List<NativeAd> nativeAdList = new ArrayList();
 
     private Button buttonBanner,
             buttonInterstitials,
@@ -146,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setNativeAd() {
         initializeView();
 
-        Appodeal.cache(this, Appodeal.NATIVE, 3);
+        Appodeal.cache(this, Appodeal.NATIVE, NATIVE_AD_MAX_COUNTER);
 
         adLoader = new AdLoader.Builder(this,
                 "ca-app-pub-3940256099942544/2247696110")
@@ -188,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nativeAdsRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         nativeAdsRecyclerView.setAdapter(appodealWrapperAdapter);
+
     }
 
     @Override
@@ -224,6 +231,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.buttonNative:
                 if (Appodeal.isLoaded(Appodeal.NATIVE)) {
                     Appodeal.hide(this, Appodeal.BANNER);
+                    //ToDo: Need do some tests
+                    nativeAdList = Appodeal.getNativeAds(NATIVE_AD_MAX_COUNTER);
+                    Appodeal.cache(this, Appodeal.NATIVE, NATIVE_AD_MAX_COUNTER);
 
                 }
                 break;
