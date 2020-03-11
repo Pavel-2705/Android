@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.BannerCallbacks;
 import com.appodeal.ads.NativeAd;
 import com.appodeal.ads.RewardedVideoCallbacks;
 import com.google.android.ads.nativetemplates.NativeTemplateStyle;
@@ -90,6 +91,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setBanner() {
+        Appodeal.setBannerCallbacks(new BannerCallbacks() {
+            @Override
+            public void onBannerLoaded(int i, boolean b) {
+                BANNER_COUNTER++;
+                if (BANNER_COUNTER > BANNER_MAX_COUNTER) {
+                    Appodeal.hide(MainActivity.this, Appodeal.BANNER_TOP);
+                }
+            }
+
+            @Override
+            public void onBannerFailedToLoad() {
+
+            }
+
+            @Override
+            public void onBannerShown() {
+
+            }
+
+            @Override
+            public void onBannerShowFailed() {
+
+            }
+
+            @Override
+            public void onBannerClicked() {
+
+            }
+
+            @Override
+            public void onBannerExpired() {
+
+            }
+        });
+
         buttonBanner = findViewById(R.id.buttonBanner);
         buttonBanner.setOnClickListener(this);
     }
@@ -201,18 +237,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonBanner:
-                if (Appodeal.isLoaded(Appodeal.BANNER)) {
-                    BANNER_COUNTER++;
+                BANNER_COUNTER = 0;
+                if (Appodeal.isLoaded(Appodeal.BANNER_TOP)) {
                     Appodeal.show(this, Appodeal.BANNER_TOP);
-                }
-                if (BANNER_COUNTER >
-                        BANNER_MAX_COUNTER) {
-                    buttonBanner.setVisibility(View.INVISIBLE);
                 }
                 break;
             case R.id.buttonInterstitials:
                 if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
-                    Appodeal.hide(this, Appodeal.BANNER);
                     Appodeal.show(this, Appodeal.INTERSTITIAL);
 
                     SleepTask sleepTask = new SleepTask();
@@ -223,18 +254,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.buttonRewardVideo:
                 if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
-                    Appodeal.hide(this, Appodeal.BANNER);
                     buttonRewardVideo.setVisibility(View.INVISIBLE);
                     Appodeal.show(this, Appodeal.REWARDED_VIDEO);
                 }
                 break;
             case R.id.buttonNative:
+                Appodeal.hide(this, Appodeal.BANNER_TOP);
+//                Appodeal.destroy(Appodeal.BANNER_TOP);
                 if (Appodeal.isLoaded(Appodeal.NATIVE)) {
-                    Appodeal.hide(this, Appodeal.BANNER);
                     //ToDo: Need do some tests
                     nativeAdList = Appodeal.getNativeAds(NATIVE_AD_MAX_COUNTER);
                     Appodeal.cache(this, Appodeal.NATIVE, NATIVE_AD_MAX_COUNTER);
-
                 }
                 break;
         }
