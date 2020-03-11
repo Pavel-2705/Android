@@ -10,8 +10,9 @@
         android:id="@+id/buttonBanner"
         style="@style/MainLayoutButtonStyle"
         android:text="@string/button_banners"
-        app:layout_constraintBottom_toTopOf="@+id/horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/vertical" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonInterstitials"
+        app:layout_constraintEnd_toStartOf="@+id/vertical"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <Button
@@ -19,7 +20,8 @@
         style="@style/MainLayoutButtonStyle"
         android:text="@string/button_interstitials"
         app:layout_constraintBottom_toTopOf="@+id/horizontal"
-        app:layout_constraintStart_toStartOf="@+id/vertical" />
+        app:layout_constraintEnd_toStartOf="@+id/vertical"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <Button
@@ -27,7 +29,8 @@
         style="@style/MainLayoutButtonStyle"
         android:clickable="false"
         android:text="@string/button_reward_video"
-        app:layout_constraintStart_toStartOf="@+id/vertical"
+        app:layout_constraintEnd_toStartOf="@+id/vertical"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/horizontal" />
 
     <Button
@@ -35,15 +38,20 @@
         style="@style/MainLayoutButtonStyle"
         android:text="@string/button_native"
         app:layout_constraintEnd_toStartOf="@+id/vertical"
-        app:layout_constraintTop_toTopOf="@+id/horizontal" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRewardVideo" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/nativeAdsRecyclerView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonBanner"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/vertical"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -52,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontal"

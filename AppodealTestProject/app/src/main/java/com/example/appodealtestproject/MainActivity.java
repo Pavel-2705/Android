@@ -213,9 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.buttonNative:
-                Appodeal.hide(this, Appodeal.BANNER_TOP);
                 if (Appodeal.isLoaded(Appodeal.NATIVE)) {
-                    //ToDo: Need do some tests
                     nativeAdList = Appodeal.getNativeAds(NATIVE_AD_MAX_COUNTER);
                     myTestAdapter.updateNativeAdList(nativeAdList);
                     Appodeal.cache(this, Appodeal.NATIVE, NATIVE_AD_MAX_COUNTER);
