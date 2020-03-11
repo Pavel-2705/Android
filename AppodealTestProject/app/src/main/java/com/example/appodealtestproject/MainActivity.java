@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,14 +14,6 @@ import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.BannerCallbacks;
 import com.appodeal.ads.NativeAd;
 import com.appodeal.ads.RewardedVideoCallbacks;
-import com.google.android.ads.nativetemplates.NativeTemplateStyle;
-import com.google.android.ads.nativetemplates.TemplateView;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,22 +45,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             buttonRewardVideo,
             buttonNative;
 
-    private TemplateView nativeTemplateView;
     private RecyclerView nativeAdsRecyclerView;
     private AppodealWrapperAdapter appodealWrapperAdapter;
-    private AdLoader adLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //ToDo: initialize MobileAds
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
 
         //ToDo: initialize Appodeal
         Appodeal.initialize(this,
@@ -189,33 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initializeView();
 
         Appodeal.cache(this, Appodeal.NATIVE, NATIVE_AD_MAX_COUNTER);
-
-        adLoader = new AdLoader.Builder(this,
-                "ca-app-pub-3940256099942544/2247696110")
-                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        // some code that displays the ad.
-                        NativeTemplateStyle style = new
-                                NativeTemplateStyle.Builder()
-                                .withMainBackgroundColor(new ColorDrawable()).build();
-
-                        nativeTemplateView = findViewById(R.id.nativeTemplateView);
-                        nativeTemplateView.setStyles(style);
-                        nativeTemplateView.setNativeAd(unifiedNativeAd);
-
-
-                        if (adLoader.isLoading()) {
-                            // The AdLoader is still loading ads.
-                            // Expect more adLoaded or onAdFailedToLoad callbacks.
-                        } else {
-                            // The AdLoader has finished loading ads.
-                        }
-                    }
-                })
-                .build();
-
-        adLoader.loadAds(new AdRequest.Builder().build(), 3);
+        //ToDo: Add native ads from Appodeal
 
         buttonNative = findViewById(R.id.buttonNative);
         buttonNative.setOnClickListener(this);
