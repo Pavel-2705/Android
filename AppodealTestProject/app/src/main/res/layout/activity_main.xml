@@ -25,8 +25,8 @@
     <Button
         android:id="@+id/buttonRewardVideo"
         style="@style/MainLayoutButtonStyle"
+        android:clickable="false"
         android:text="@string/button_reward_video"
-        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/vertical"
         app:layout_constraintTop_toTopOf="@+id/horizontal" />
 

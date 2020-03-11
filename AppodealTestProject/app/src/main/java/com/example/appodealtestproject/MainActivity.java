@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onRewardedVideoLoaded(boolean b) {
                 if (REWARDED_VIDEO_COUNTER <= REWARDED_VIDEO_MAX_COUNTER) {
-                    buttonRewardVideo.setVisibility(View.VISIBLE);
+                    buttonRewardVideo.setClickable(true);
                     REWARDED_VIDEO_COUNTER++;
                 }
             }
@@ -254,13 +254,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.buttonRewardVideo:
                 if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO)) {
-                    buttonRewardVideo.setVisibility(View.INVISIBLE);
+                    buttonRewardVideo.setClickable(false);
                     Appodeal.show(this, Appodeal.REWARDED_VIDEO);
                 }
                 break;
             case R.id.buttonNative:
                 Appodeal.hide(this, Appodeal.BANNER_TOP);
-//                Appodeal.destroy(Appodeal.BANNER_TOP);
                 if (Appodeal.isLoaded(Appodeal.NATIVE)) {
                     //ToDo: Need do some tests
                     nativeAdList = Appodeal.getNativeAds(NATIVE_AD_MAX_COUNTER);
@@ -281,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            buttonInterstitials.setVisibility(View.INVISIBLE);
+            buttonInterstitials.setClickable(false);
         }
 
         @Override
@@ -297,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            buttonInterstitials.setVisibility(View.VISIBLE);
+            buttonInterstitials.setClickable(true);
         }
     }
 }
